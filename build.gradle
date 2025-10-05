@@ -1,0 +1,64 @@
+plugins {
+    id 'java'
+    id 'application'
+    id 'maven-publish'
+}
+
+wrapper {
+    gradleVersion = '9.1.0'
+}
+
+group = 'com.sdk'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    gradlePluginPortal()
+    mavenCentral()
+}
+
+dependencies {
+
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.2'
+    implementation 'com.fasterxml.jackson.core:jackson-annotations:2.15.2'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.9.2'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    implementation 'org.seleniumhq.selenium:selenium-java:4.15.0'
+    implementation 'io.github.bonigarcia:webdrivermanager:6.3.2'
+    implementation 'org.aspectj:aspectjrt:1.9.24'
+    runtimeOnly 'org.aspectj:aspectjweaver:1.9.24'
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+}
+
+test {
+    useJUnitPlatform()
+    jvmArgs = [
+            "-javaagent:${configurations.runtimeClasspath.find { it.name.contains('aspectjweaver')}}",
+            "-Daj.weaving.verbose=true",
+            "-Dorg.aspectj.weaver.showWeaveInfo=true"
+    ]
+    //jvmArgs += ["-javaagent:${projectDir}/libs/aspectjweaver-1.9.19.jar","-Daj.weaving.verbose=true", "-Dorg.aspectj.weaver.showWeaveInfo=true"]
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+
+            groupId = project.group
+            artifactId = 'self-healing-sdk-java'
+            version = project.version
+        }
+    }
+
+    repositories {
+        // Publish locally - you can publish to Maven Central or private repo by changing this
+        maven {
+            name = 'localRepo'
+            url = uri("${buildDir}/repo")
+        }
+    }
+}

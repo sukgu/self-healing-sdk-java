@@ -1,0 +1,20 @@
+<!DOCTYPE aspectj PUBLIC "-//AspectJ//DTD 1.5.0//EN" "http://www.eclipse.org/aspectj/dtd/aspectj.dtd">
+<aspectj>
+    <weaver>
+        <!-- Specify which packages or classes to include for weaving -->
+        <include within="org.openqa.selenium..*"/>
+        <include within="com.sdk.*"/>
+
+    </weaver>
+
+    <aspects>
+        <!-- Declare the aspect to be used for weaving -->
+        <aspect name="com.sdk.SelfHealingSeleniumAspect"/>
+        <aspect name="com.sdk.MyTestAspect"/>
+
+        <!-- You can also define concrete aspects here, especially for defining precedence or concrete pointcuts -->
+        <!-- <concrete-aspect name="com.example.myapp.aspects.SpecificLoggingAspect" extends="com.example.myapp.aspects.LoggingAspect">
+            <pointcut name="specificScope" expression="execution(* com.example.myapp.service.MyService.doSomething(..))"/>
+        </concrete-aspect> -->
+    </aspects>
+</aspectj>
